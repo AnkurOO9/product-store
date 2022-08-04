@@ -1,0 +1,46 @@
+.cart-container {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.cart-card {
+    max-width: 400px;
+    margin-bottom: 8px;
+    margin: 10px;
+}
+
+.mat-card-title {
+    font-size: 17px;
+}
+
+.display-action {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-list {
+    height: 650px;
+    overflow: auto;
+    padding: 10px;
+}
+
+.bill {
+    padding: 5px;
+    text-align: center;
+}
+
+.description {
+    line-height: 1.5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.font-weight-total {
+    font-weight: bold;
+}

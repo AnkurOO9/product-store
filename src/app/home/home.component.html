@@ -1,0 +1,34 @@
+<div class="product-container">
+    <ng-container *ngFor="let product of productList">
+        <mat-card class="product-card">
+            <img mat-card-image [src]="product.image" alt="Photo">
+            <mat-card-content>
+                <mat-card-title [matTooltip]="product.title" matTooltipPosition="above">{{product.title}}
+                </mat-card-title>
+                <mat-card-subtitle>{{product.price | currency}}</mat-card-subtitle>
+            </mat-card-content>
+
+            <mat-divider></mat-divider>
+
+            <mat-card-actions>
+                <button class="ponter-event-none" mat-icon-button [color]="'accent'"
+                    *ngFor="let rating of [1,2,3,4,5];index as i" [id]="'star_'+i"
+                    (click)="product.rating.rate = i+1">
+                    <mat-icon>
+                        {{(product.rating.rate >= (i+1)) ? 'star' : 'star_border'}}
+                    </mat-icon>
+                </button>
+                <button mat-icon-button aria-label="icon-button with add cart icon">
+                    <mat-icon (click)="addProductToCart(product)">
+                        <span class="material-symbols-outlined">
+                            add_shopping_cart
+                        </span>
+                    </mat-icon>
+                </button>
+            </mat-card-actions>
+            <mat-card-footer>
+                <mat-progress-bar *ngIf="product.isProgressBar" mode="indeterminate"></mat-progress-bar>
+            </mat-card-footer>
+        </mat-card>
+    </ng-container>
+</div>
