@@ -1,7 +1,7 @@
 <div class="bill">
     <span class="font-weight-total">Total amount : {{billAmount | currency}}</span>
 </div>
-<div class="cart-container">
+<div class="cart-container" *ngIf="cartList.length > 0 else elsePartCartEmpty">
     <ng-container *ngFor="let cartProduct of cartList; index as i;">
         <mat-card class="cart-card">
             <mat-card-title-group>
@@ -34,3 +34,7 @@
         </mat-card>
     </ng-container>
 </div>
+
+<ng-template #elsePartCartEmpty>
+    <p class="empty-cart">Your cart is empty!!</p>
+</ng-template>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { UtilsService } from 'src/shared/services/utils.service';
+import { select, Store } from '@ngrx/store';
+import { selectCartItem } from 'src/app/store/product.selector';
 
 @Component({
   selector: 'app-header',
@@ -10,11 +11,16 @@ import { UtilsService } from 'src/shared/services/utils.service';
 export class HeaderComponent implements OnInit {
 
   constructor(
-    public utilsService: UtilsService,
     private router: Router,
+    public store: Store,
   ) { }
 
+  cartItemCount = 0;
+
   ngOnInit(): void {
+    this.store.pipe(select(selectCartItem)).subscribe(cartItems => {
+      this.cartItemCount = cartItems.length;
+    })
   }
 
   navigateToCart(path: string) {

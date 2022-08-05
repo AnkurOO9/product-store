@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { select, Store } from '@ngrx/store';
 import { Product } from 'src/models/product';
-import { UtilsService } from 'src/shared/services/utils.service';
-import { ProductService } from '../services/product.service';
+import { addProductToCart } from '../store/product.action';
+import { selectCartItem } from '../store/product.selector';
 
 @Component({
   selector: 'app-cart',
@@ -14,11 +15,10 @@ export class CartComponent implements OnInit {
   billAmount = 0;
 
   constructor(
-    private utilsService: UtilsService,
-    private productService: ProductService,
+    private store: Store,
   ) {
-    this.productService.getCartList().subscribe((res: Product[]) => {
-      this.cartList = res;
+    this.store.pipe(select(selectCartItem)).subscribe((products: Product[]) => {
+      this.cartList = JSON.parse(JSON.stringify(products));
     });
   }
 
@@ -28,8 +28,7 @@ export class CartComponent implements OnInit {
 
   deleteItem(index: number) {
     this.cartList.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(this.cartList));
-    this.utilsService.reflactCartCount$.next(this.cartList.length);
+    this.store.dispatch(addProductToCart({ cartItem: this.cartList }));
     this.calculateBill();
   }
 
@@ -38,7 +37,7 @@ export class CartComponent implements OnInit {
     if (item.cartDuplicateCount <= 0) {
       this.deleteItem(index);
     }
-    localStorage.setItem('cart', JSON.stringify(this.cartList));
+    this.store.dispatch(addProductToCart({ cartItem: this.cartList }));
     this.calculateBill();
   }
 

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { select, Store } from '@ngrx/store';
 import { Product } from 'src/models/product';
-import { UtilsService } from 'src/shared/services/utils.service';
-import { ProductService } from '../services/product.service';
+import { addProductToCart, getAllProduct } from '../store/product.action';
+import { selectCartItem, selectProduct } from '../store/product.selector';
 
 @Component({
   selector: 'app-home',
@@ -15,18 +16,19 @@ export class HomeComponent implements OnInit {
   cartList: Product[] = [];
 
   constructor(
-    private productService: ProductService,
     private snackBar: MatSnackBar,
-    private utilsService: UtilsService,
+    private store: Store,
   ) {
-    this.productService.getCartList().subscribe((res: Product[]) => {
-      this.cartList = res;
-    });
   }
 
   ngOnInit(): void {
-    this.productService.getProductList().subscribe((res: Product[]) => {
-      this.productList = res;
+    this.store.pipe(select(selectProduct)).subscribe((products: Product[]) => {
+      this.productList = JSON.parse(JSON.stringify(products));
+    });
+    this.store.dispatch(getAllProduct());
+
+    this.store.pipe(select(selectCartItem)).subscribe((cartItems: Product[]) => {
+      this.cartList = JSON.parse(JSON.stringify(cartItems));
     });
   }
 
@@ -41,9 +43,9 @@ export class HomeComponent implements OnInit {
       obj.cartDuplicateCount = 1;
       this.cartList.push(obj);
     }
-    localStorage.setItem('cart', JSON.stringify(this.cartList));
+
+    this.store.dispatch(addProductToCart({ cartItem: this.cartList }));
     this.snackBar.open('Product added to cart', '', { duration: 1000 });
-    this.utilsService.reflactCartCount$.next(this.cartList.length);
     setTimeout(() => {
       item.isProgressBar = false;
     }, 500);

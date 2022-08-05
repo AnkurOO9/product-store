@@ -13,16 +13,4 @@ export class ProductService {
   getProductList(): Observable<Product[]> {
     return this.http.get<Product[]>(`https://fakestoreapi.com/products`);
   }
-
-  getCartList(): Observable<Product[]> {
-    return new Observable((res) => {
-      const getStorage = localStorage.getItem('cart');
-      if (!getStorage) {
-        localStorage.setItem('cart', JSON.stringify([]));
-        res.next([]);
-      } else {
-        res.next(JSON.parse(getStorage));
-      }
-    });
-  }
 }
